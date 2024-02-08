@@ -7,6 +7,9 @@ function App() {
 
   return (
     <>
+      <div>
+        <h1>This is top Bar</h1>
+      </div>
       <BrowserRouter>
         <Routes>
           <Route path="/dashboard" element={<Dashboard/> } />
