@@ -1,31 +1,58 @@
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import './App.css'
-import Dashboard from './components/Dashboard';
-import Landing from './components/Landing';
+import { useContext, useMemo, useState } from "react"
+import { CountContext } from "./context";
+import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { countAtom, evenSelector } from "./store/atoms/count";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <AppBar />
-        <Routes>
-          <Route path="/dashboard" element={<Dashboard/> } />
-          <Route path="/" element={<Landing/> } />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <div>
+      <RecoilRoot>
+        <Count />
+      </RecoilRoot>
+    </div>
   )
 }
 
-function AppBar() {
-  const navigate = useNavigate();
+function Count() {
+  console.log("re-render");
+  return <div>
+    <CountRenderer />
+    <Buttons />
+  </div>
+}
 
-  return(
-  <div>
-        <button onClick={() => {navigate("/dashboard")}}>Dashboard</button>
-        <button onClick={() => {navigate("/")}}>Landing Page</button>
-    </div>
-  )
+function CountRenderer() {
+  const count = useRecoilValue(countAtom);
+  
+  return <div>
+    <b>
+      {count}
+    </b>
+    <EvenCountRenderer />
+  </div>
+}
+
+function EvenCountRenderer() {
+  const isEven = useRecoilValue(evenSelector);
+
+  return <div>
+    {isEven ? "It is even" : null}
+  </div>
+}
+
+function Buttons() {
+  const setCount = useSetRecoilState(countAtom);
+  console.log("buttons re-rendererd");
+
+  return <div>
+    <button onClick={() => {
+      setCount(count => count + 1)
+    }}>Increase</button>
+
+    <button onClick={() => {
+      setCount(count => count - 1)
+    }}>Decrease</button>
+  </div>
 }
 
 export default App
